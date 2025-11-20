@@ -1,4 +1,8 @@
 <script setup>
+/**
+ * Button component with multiple variants, sizes, and states
+ * Supports loading state, disabled state, and different button types
+ */
 defineProps({
     type: {
         type: String,

@@ -1,6 +1,10 @@
 <script setup>
 import { computed, onMounted, onUnmounted } from 'vue';
 
+/**
+ * Alert component for displaying contextual feedback messages
+ * Supports success, error, warning, and info types with auto-dismiss functionality
+ */
 const props = defineProps({
     type: {
         type: String,
@@ -27,6 +31,10 @@ const props = defineProps({
 
 const emit = defineEmits(['close']);
 
+/**
+ * Maps alert types to hue offsets from primary color
+ * Colors are calculated relative to the primary color for theme consistency
+ */
 const toneMap = {
     success: { hue: 'calc(var(--primary-h) + 120)' },
     error: { hue: 'calc(var(--primary-h) - 40)' },
@@ -34,8 +42,19 @@ const toneMap = {
     info: { hue: 'var(--primary-h)' },
 };
 
+/**
+ * Builds HSL color string from hue, saturation, and lightness values
+ * @param {string} hue - CSS variable or calculated hue value
+ * @param {string} saturation - Saturation percentage
+ * @param {string} lightness - Lightness percentage
+ * @returns {string} HSL color string
+ */
 const buildColor = (hue, saturation, lightness) => `hsl(${hue} ${saturation} ${lightness})`;
 
+/**
+ * Computed style object for alert colors based on type
+ * Dynamically generates colors using CSS custom properties
+ */
 const alertStyle = computed(() => {
     const tone = toneMap[props.type] || toneMap.info;
     return {
@@ -54,6 +73,10 @@ const alertClasses = computed(
 
 const iconClasses = computed(() => 'text-[var(--alert-icon)]');
 
+/**
+ * SVG path data for each alert type icon
+ * Icons are from Heroicons library
+ */
 const icons = {
     success: 'M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
     error: 'M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
@@ -61,12 +84,20 @@ const icons = {
     info: 'M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z',
 };
 
+/** Timer reference for auto-dismiss functionality */
 let autoDismissTimer = null;
 
+/**
+ * Emits close event to parent component
+ */
 const close = () => {
     emit('close');
 };
 
+/**
+ * Starts auto-dismiss timer if enabled
+ * Only works if both autoDismiss and dismissible are true
+ */
 const startAutoDismiss = () => {
     if (props.autoDismiss && props.dismissible) {
         autoDismissTimer = setTimeout(() => {

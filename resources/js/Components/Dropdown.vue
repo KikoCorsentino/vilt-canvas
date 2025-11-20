@@ -1,6 +1,10 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 
+/**
+ * Dropdown component with click-outside, keyboard navigation, and accessibility support
+ * Provides slots for trigger and content with open/close state management
+ */
 const props = defineProps({
     align: {
         type: String,
@@ -21,14 +25,24 @@ const props = defineProps({
 
 const emit = defineEmits(['close']);
 
+/** Whether the dropdown is currently open */
 const open = ref(false);
+/** Reference to the trigger element */
 const trigger = ref(null);
+/** Reference to the dropdown content element */
 const content = ref(null);
 
+/**
+ * Computed Tailwind width class based on width prop
+ */
 const widthClass = computed(() => {
     return `w-${props.width}`;
 });
 
+/**
+ * Computed alignment classes for dropdown positioning
+ * Handles both horizontal (left/right) and vertical (top/bottom) alignment
+ */
 const alignmentClasses = computed(() => {
     const horizontal = props.align === 'left' ? 'left-0' : 'right-0';
     
@@ -42,15 +56,25 @@ const alignmentClasses = computed(() => {
     return `top-full mt-2 ${horizontal} ${origin}`;
 });
 
+/**
+ * Closes the dropdown and emits close event
+ */
 const closeDropdown = () => {
     open.value = false;
     emit('close');
 };
 
+/**
+ * Toggles dropdown open/close state
+ */
 const toggleDropdown = () => {
     open.value = !open.value;
 };
 
+/**
+ * Handles click events outside the dropdown
+ * Closes dropdown if click is outside both trigger and content elements
+ */
 const handleClickOutside = (event) => {
     if (
         open.value &&
@@ -63,12 +87,21 @@ const handleClickOutside = (event) => {
     }
 };
 
+/**
+ * Handles Escape key press to close dropdown
+ */
 const handleEscape = (event) => {
     if (event.key === 'Escape' && open.value) {
         closeDropdown();
     }
 };
 
+/**
+ * Handles arrow key navigation within dropdown
+ * Implements keyboard navigation pattern for accessibility
+ * ArrowDown: Move to next item (wraps to first)
+ * ArrowUp: Move to previous item (wraps to last)
+ */
 const handleArrowKeys = (event) => {
     if (!open.value) {
         return;

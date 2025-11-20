@@ -1,6 +1,10 @@
 <script setup>
 import { computed } from 'vue';
 
+/**
+ * Text input component with error states and accessibility support
+ * Supports various input types: text, email, password, number, tel, url, search
+ */
 const props = defineProps({
     modelValue: {
         type: [String, Number],
@@ -40,8 +44,16 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue']);
 
+/**
+ * Generates unique ID for input if not provided
+ * Used for associating labels and error messages
+ */
 const inputId = computed(() => props.id || `input-${Math.random().toString(36).substr(2, 9)}`);
 
+/**
+ * Emits updated value to parent component
+ * Handles v-model two-way binding
+ */
 const updateValue = (event) => {
     emit('update:modelValue', event.target.value);
 };

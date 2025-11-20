@@ -1,6 +1,10 @@
 <script setup>
 import { computed } from 'vue';
 
+/**
+ * Checkbox component with label support and accessibility features
+ * Supports v-model two-way binding
+ */
 const props = defineProps({
     modelValue: {
         type: Boolean,
@@ -26,10 +30,22 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue']);
 
+/**
+ * Generates unique ID for checkbox if not provided
+ * Used for associating label with checkbox
+ */
 const checkboxId = computed(() => props.id || `checkbox-${Math.random().toString(36).substr(2, 9)}`);
 
+/**
+ * Computed checked state
+ * Checks if modelValue matches the checkbox value
+ */
 const isChecked = computed(() => props.modelValue === props.value);
 
+/**
+ * Updates checkbox value and emits to parent
+ * Sets modelValue to props.value when checked, false when unchecked
+ */
 const updateValue = (event) => {
     emit('update:modelValue', event.target.checked ? props.value : false);
 };

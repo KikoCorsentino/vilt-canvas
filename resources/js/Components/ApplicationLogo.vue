@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * Application logo component
+ * Displays the VILT Canvas logo with optional width/height props
+ * Uses SVG logo with text label
+ */
 defineProps({
     width: {
         type: [String, Number],

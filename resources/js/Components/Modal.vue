@@ -1,6 +1,11 @@
 <script setup>
 import { computed, watch, onMounted, onUnmounted } from 'vue';
 
+/**
+ * Modal component with backdrop, keyboard, and click-outside support
+ * Uses Teleport to render outside component tree
+ * Prevents body scroll when open
+ */
 const props = defineProps({
     show: {
         type: Boolean,
@@ -19,6 +24,9 @@ const props = defineProps({
 
 const emit = defineEmits(['close']);
 
+/**
+ * Computed Tailwind max-width class based on maxWidth prop
+ */
 const maxWidthClass = computed(() => {
     return {
         sm: 'max-w-sm',
@@ -29,18 +37,29 @@ const maxWidthClass = computed(() => {
     }[props.maxWidth];
 });
 
+/**
+ * Closes modal if closeable
+ * Emits close event to parent component
+ */
 const close = () => {
     if (props.closeable) {
         emit('close');
     }
 };
 
+/**
+ * Handles Escape key press to close modal
+ */
 const closeOnEscape = (e) => {
     if (e.key === 'Escape' && props.show) {
         close();
     }
 };
 
+/**
+ * Handles backdrop click to close modal
+ * Only closes if click is directly on backdrop (not modal content)
+ */
 const closeOnBackdropClick = (e) => {
     if (e.target === e.currentTarget && props.closeable) {
         close();
@@ -55,6 +74,10 @@ onUnmounted(() => {
     document.removeEventListener('keydown', closeOnEscape);
 });
 
+/**
+ * Watches show prop to prevent body scroll when modal is open
+ * Sets overflow: hidden on body when modal opens, restores when closed
+ */
 watch(
     () => props.show,
     (show) => {

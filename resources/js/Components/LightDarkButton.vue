@@ -1,9 +1,19 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 
+/**
+ * Light/Dark mode toggle button component
+ * Manages theme preference in localStorage and applies to <html> element
+ */
+
+/** LocalStorage key for theme preference */
 const STORAGE_KEY = 'theme-preference';
 
-// Get initial theme from localStorage or default to 'light'
+/**
+ * Gets initial theme from localStorage or defaults to 'light'
+ * Handles SSR by checking for window object
+ * @returns {string} 'light' or 'dark'
+ */
 const getInitialTheme = () => {
     if (typeof window === 'undefined') {
         return 'light';
@@ -12,9 +22,14 @@ const getInitialTheme = () => {
     return stored === 'dark' ? 'dark' : 'light';
 };
 
+/** Current theme state */
 const theme = ref(getInitialTheme());
 
-// Apply theme to <html> element
+/**
+ * Applies theme class to <html> element
+ * Removes both light and dark classes before adding new one
+ * @param {string} newTheme - 'light' or 'dark'
+ */
 const applyTheme = (newTheme) => {
     if (typeof document === 'undefined') {
         return;
@@ -25,12 +40,18 @@ const applyTheme = (newTheme) => {
     html.classList.add(newTheme);
 };
 
-// Initialize theme on mount
+/**
+ * Initialize theme on component mount
+ * Ensures theme is applied even if localStorage was set before component loaded
+ */
 onMounted(() => {
     applyTheme(theme.value);
 });
 
-// Toggle between light and dark
+/**
+ * Toggles between light and dark themes
+ * Updates state, applies to DOM, and persists to localStorage
+ */
 const toggle = () => {
     theme.value = theme.value === 'light' ? 'dark' : 'light';
     applyTheme(theme.value);
@@ -41,7 +62,10 @@ const toggle = () => {
     }
 };
 
+/** Computed property indicating if dark mode is active */
 const isDark = computed(() => theme.value === 'dark');
+
+/** Computed accessibility label for the toggle button */
 const themeLabel = computed(() => isDark.value ? 'Switch to light mode' : 'Switch to dark mode');
 </script>
 

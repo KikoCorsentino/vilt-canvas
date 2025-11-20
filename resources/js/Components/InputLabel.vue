@@ -1,4 +1,8 @@
 <script setup>
+/**
+ * Label component for form inputs
+ * Supports required indicator and slot content
+ */
 defineProps({
     value: {
         type: String,
